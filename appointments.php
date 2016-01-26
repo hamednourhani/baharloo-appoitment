@@ -1318,9 +1318,9 @@ class Appointments {
 		$r = $wpdb->get_row( $wpdb->prepare("SELECT * FROM {$this->app_table} WHERE ID=%d", $app_id) );
 		if ( $r != null ) {
 		
-			$_REQUEST["app_location_id"] = 0;
-			$_REQUEST["app_service_id"] = $r->service;
-			$_REQUEST["app_provider_id"] = $r->worker;
+//			$_REQUEST["app_location_id"] = 0;
+//			$_REQUEST["app_service_id"] = $r->service;
+//			$_REQUEST["app_provider_id"] = $r->worker;
 		
 			// Why oh why didn't we do this all along?
 			if (empty($r->email) && !empty($r->user) && (int)$r->user) {
@@ -1334,7 +1334,7 @@ class Appointments {
 		
 
 		
-			$sms->to = $r->phone;
+			$sms->to = array($r->phone);
 			$sms->sms = $body;
 			$sms->SendSMS();
 
@@ -1425,7 +1425,7 @@ class Appointments {
 
 
 
-		$sms->to = $app->phone;
+		$sms->to = array($app->phone);
 		$sms->msg = $msg;
 		$testSms = $sms->SendSMS();
 
