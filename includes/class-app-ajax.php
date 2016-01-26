@@ -99,11 +99,15 @@ class Appointments_AJAX {
 		} else {
 			// Insert
 			$app_id = appointments_insert_appointment( $data );
+
 			if ( $app_id ) {
 				$insert_result = true;
 				if ( $resend ) {
 					appointments_send_confirmation( $app_id );
+
+
 				}
+				$appointments->sms_new_appointment($app_id);
 			}
 		}
 

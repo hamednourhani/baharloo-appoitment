@@ -1314,47 +1314,89 @@ class Appointments {
 	function sms_new_appointment($app_id){
 		global $wpdb,$sms;
 
+//		$email = array($this->get_admin_email());
+		$app = $this->get_app($app_id);
 
-		$r = $wpdb->get_row( $wpdb->prepare("SELECT * FROM {$this->app_table} WHERE ID=%d", $app_id) );
-		if ( $r != null ) {
-		
-//			$_REQUEST["app_location_id"] = 0;
-//			$_REQUEST["app_service_id"] = $r->service;
-//			$_REQUEST["app_provider_id"] = $r->worker;
-		
-			// Why oh why didn't we do this all along?
-			if (empty($r->email) && !empty($r->user) && (int)$r->user) {
-				$wp_user = get_user_by('id', (int)$r->user);
-				if ($wp_user && !empty($wp_user->user_email)) $r->email = $wp_user->user_email;
-			}
-		
-			$body = apply_filters( 'app_confirmation_message', $this->add_cancel_link( $this->_replace( $this->options["confirmation_message"],
-					$r->name, $this->get_service_name( $r->service), $this->get_worker_name( $r->worker), $r->start, $r->price,
-					$this->get_deposit($r->price), $r->phone, $r->note, $r->address, $r->email, $r->city ), $app_id ), $r, $app_id );
-		
+//		$subject = !empty($this->options['removal_notification_subject'])
+//				? $this->options['removal_notification_subject']
+//				: App_Template::get_default_removal_notification_subject();
+//
+//		$subject = $this->_replace($subject,
+//				$app->name,
+//				$this->get_service_name($app->service),
+//				$this->get_worker_name($app->worker),
+//				$app->start,
+//				$app->price,
+//				$this->get_deposit($app->price),
+//				$app->phone,
+//				$app->note,
+//				$app->address,
+//				$app->email,
+//				$app->city
+//		);
 
-		
-			$sms->to = array($r->phone);
-			$sms->sms = $body;
-			$sms->SendSMS();
+//		$msg = !empty($this->options['confirmation_message'])
+//				? $this->options['confirmation_message']
+//				: App_Template::get_default_confirmation_message();
+
+//		$msg = $this->_replace($msg,
+//				$app->name,
+//				$this->get_service_name($app->service),
+//				$this->get_worker_name($app->worker),
+//				$app->start,
+//				$app->price,
+//				$this->get_deposit($app->price),
+//				$app->phone,
+//				$app->note,
+//				$app->address,
+//				$app->email,
+//				$app->city
+//		);
+  	$msg = apply_filters( 'app_confirmation_message', $this->add_cancel_link( $this->_replace( $this->options["confirmation_message"],
+					$app->name, $this->get_service_name( $app->service), $this->get_worker_name( $app->worker), $app->start, $app->price,
+					$this->get_deposit($app->price), $app->phone, $app->note, $app->address, $app->email, $app->city ), $app_id ), $app, $app_id );
+//
+
+
+
+		$sms->to = array($app->phone);
+		$sms->msg = $msg;
+		$sms->SendSMS();
+
+
+
+//		$r = $wpdb->get_row( $wpdb->prepare("SELECT * FROM {$this->app_table} WHERE ID=%d", $app_id) );
+
+
+
+//			$body = apply_filters( 'app_confirmation_message', $this->add_cancel_link( $this->_replace( $this->options["confirmation_message"],
+//					$r->name, $this->get_service_name( $r->service), $this->get_worker_name( $r->worker), $r->start, $r->price,
+//					$this->get_deposit($r->price), $r->phone, $r->note, $r->address, $r->email, $r->city ), $app_id ), $r, $app_id );
+//
+//			$body = "this is the message";
+//
+//			//$sms->to = array($r->phone);
+//			$sms->to = array("09124134625");
+//			$sms->sms = "test sms";
+//			$sms->SendSMS();
 
 
 
 					// Log only if it is set so
 
-				wp_mail(
-						$r->email,
-						$this->options["confirmation_subject"],
-						$body,
-						$this->message_headers( ),
-						apply_filters( 'app_confirmation_email_attachments', '' )
-				);
-				$this->log( sprintf( __('Confirmation message sms %s for appointment ID:%s','my-plugin'), $r->phone, $app_id ) );
+//				wp_mail(
+//						"itstarir@gmail.com",
+//						"Send confirmarion sms email test",
+//						"Test Body",
+//						$this->message_headers( )
+//
+//				);
+//				$this->log( sprintf( __('Confirmation message sms %s for appointment ID:%s','my-plugin'), $r->phone, $app_id ) );
 		
 						
 				
 
-		}
+
 		return true;
 // 			$app_table = $wpdb->prefix . "app_appointments";
 // 			$r = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$app_table} WHERE ID=%d", $app_id));

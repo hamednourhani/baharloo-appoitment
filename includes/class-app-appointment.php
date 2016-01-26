@@ -190,17 +190,19 @@ function appointments_insert_appointment( $args ) {
 	appointments_update_user_appointment_data( $app_id );
 
 	do_action( 'app_new_appointment', $app_id );
-	do_sms_new_appointment($app_id);
 
 	do_action( 'wpmudev_appointments_insert_appointment', $app_id );
+//	do_sms_new_appointment($app_id);
 
 	return $app_id;
 }
 
 add_action( 'app_new_appointment', 'do_sms_new_appointment' );
+//add_action( 'wpmudev_appointments_insert_appointment', 'do_sms_new_appointment' );
 function do_sms_new_appointment($app_id){
 	global $appointments;
 	$appointments->sms_new_appointment($app_id);
+//	$appointments->sms_cancel_appointment($app_id);
 
 }
 
@@ -218,6 +220,7 @@ function do_sms_removed_appointment($app_id){
 function appointments_send_confirmation( $app_id ) {
 	global $appointments;
 	$appointments->send_confirmation( $app_id );
+
 }
 
 /**
